@@ -1,6 +1,5 @@
 from tkinter import *
 
-
 from contador_de_moedas import pergunta_quantas_moedas_de_cada_valor_tem, \
     retorna_uma_lista_com_todos_os_valores_das_moedas, retorna_a_soma_total_dos_valores_das_moedas
 from envia_emails import pergunta_para_qal_email_o_usuario_quer_enviar, faz_o_corpo_do_email, \
@@ -8,27 +7,33 @@ from envia_emails import pergunta_para_qal_email_o_usuario_quer_enviar, faz_o_co
 
 
 # Parte das moedas
-def is_valor_em_branco():
+def verifica_se_todos_os_campos_estao_preenchidos():
     if caixa_de_texto_da_moeda_de_1_real.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco(True)
+        return mostra_a_mensagem_de_campo_em_branco()
     if caixa_de_texto_da_moeda_de_50_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco(True)
+        return mostra_a_mensagem_de_campo_em_branco()
     if caixa_de_texto_da_moeda_de_25_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco(True)
+        return mostra_a_mensagem_de_campo_em_branco()
     if caixa_de_texto_da_moeda_de_10_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco(True)
+        return mostra_a_mensagem_de_campo_em_branco()
     if caixa_de_texto_da_moeda_de_5_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco(True)
+        return mostra_a_mensagem_de_campo_em_branco()
+    if "@" not in caixa_de_texto_do_email.get():
+        return mostra_a_mensagem_de_email_invalido()
 
     return pega_as_quantidades_do_input_e_passa_para_a_funcao()
 
 
-def mostra_a_mensagem_de_campo_em_branco(resposta_booleana: bool):
-    if resposta_booleana:
-        label_de_alerta_de_valores_nao_preenchidos = Label(janela, text="Preencha todos os valores antes de apertar o botão!", foreground="red")
-        label_de_alerta_de_valores_nao_preenchidos.grid(column=6, row=4, columnspan=4, rowspan=2)
-    else:
-        return pega_as_quantidades_do_input_e_passa_para_a_funcao()
+def mostra_a_mensagem_de_campo_em_branco():
+    label_de_alerta_de_valores_nao_preenchidos = Label(janela,
+                                                       text="Preencha todos os valores antes de apertar o botão!",
+                                                       foreground="red")
+    label_de_alerta_de_valores_nao_preenchidos.grid(column=5, row=4, columnspan=4, rowspan=2)
+
+
+def mostra_a_mensagem_de_email_invalido():
+    label_de_alerta_de_email_invalido = Label(janela, text="E-mail inválido", foreground="red")
+    label_de_alerta_de_email_invalido.grid(column=4, row=10, columnspan=2)
 
 
 def pega_as_quantidades_do_input_e_passa_para_a_funcao():
@@ -40,17 +45,20 @@ def pega_as_quantidades_do_input_e_passa_para_a_funcao():
         caixa_de_texto_da_moeda_de_5_centavos.get(),
     ]
 
-    lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda)
+    lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(
+        lista_com_a_quantidade_de_cada_moeda)
     soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
 
-    return lista_com_os_valores_de_cada_moeda, soma_total
+    return envia_o_email_com_os_valores_das_moedas(lista_com_os_valores_de_cada_moeda, soma_total)
 
 
-# Parte do e-mail
-# email_para_enviar = pergunta_para_qal_email_o_usuario_quer_enviar()
-# corpo_do_email = faz_o_corpo_do_email(quantidade_de_moedas_de_cada_valor, lista_com_os_valores_de_cada_moeda,
-# soma_total, email_para_enviar)
-# manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total(email_para_enviar, corpo_do_email)
+def envia_o_email_com_os_valores_das_moedas(lista_com_os_valores_de_cada_moeda: list, soma_total):
+    email_para_enviar = caixa_de_texto_do_email.get()
+
+    corpo_do_email = faz_o_corpo_do_email(lista_com_os_valores_de_cada_moeda, lista_com_os_valores_de_cada_moeda,
+                                          soma_total, email_para_enviar)
+    manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total(email_para_enviar, corpo_do_email)
+
 
 janela = Tk()
 janela.title("Contador de moedas")
@@ -62,13 +70,12 @@ for i in range(10):
     label_de_orientacao_das_colunas = Label(janela, text=f"| Coluna {i} |")
     label_de_orientacao_das_colunas.grid(column=i, row=0)
 
-
 label_de_boas_vindas = Label(janela, text="Bem vindo ao contador de moedas")
 label_de_boas_vindas.grid(column=4, row=1, columnspan=3)
 
-
 for indice in range(5):
-    label_das_moedas = Label(janela, text=f"Qual a quantidade de moedas de {lista_com_os_valores_de_moedas_existentes[indice]}?")
+    label_das_moedas = Label(janela,
+                             text=f"Qual a quantidade de moedas de {lista_com_os_valores_de_moedas_existentes[indice]}?")
     label_das_moedas.grid(column=0, row=indice + 2, columnspan=3)
 
 # Caixa de texto da moeda de 1 real
@@ -92,7 +99,19 @@ caixa_de_texto_da_moeda_de_5_centavos = Entry(janela)
 caixa_de_texto_da_moeda_de_5_centavos.grid(column=3, row=6, columnspan=2)
 
 # Botão para chamar a função "is_valor_em_branco"
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Confirmar", command=is_valor_em_branco)
-botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=5, row=4, columnspan=1, rowspan=2)
+# botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Confirmar", command=is_valor_em_branco)
+# botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=5, row=4, columnspan=1, rowspan=2)
+
+# Parte do e-mail
+label_de_boas_vindas = Label(janela, text="Coloque um E-mail para que possamos enviar os resultados")
+label_de_boas_vindas.grid(column=2, row=7, columnspan=6)
+
+# Caixa de texto para digitar um E-mail
+caixa_de_texto_do_email = Entry(janela, width=35)
+caixa_de_texto_do_email.grid(column=3, row=8, columnspan=4)
+
+# Botão para chamar a função "is_valor_em_branco"
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=verifica_se_todos_os_campos_estao_preenchidos)
+botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=4, row=9, columnspan=2)
 
 janela.mainloop()
