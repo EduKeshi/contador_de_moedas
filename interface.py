@@ -8,6 +8,29 @@ from envia_emails import pergunta_para_qal_email_o_usuario_quer_enviar, faz_o_co
 
 
 # Parte das moedas
+def is_valor_em_branco():
+    if caixa_de_texto_da_moeda_de_1_real.get() == "":
+        return mostra_a_mensagem_de_campo_em_branco(True)
+    if caixa_de_texto_da_moeda_de_50_centavos.get() == "":
+        return mostra_a_mensagem_de_campo_em_branco(True)
+    if caixa_de_texto_da_moeda_de_25_centavos.get() == "":
+        return mostra_a_mensagem_de_campo_em_branco(True)
+    if caixa_de_texto_da_moeda_de_10_centavos.get() == "":
+        return mostra_a_mensagem_de_campo_em_branco(True)
+    if caixa_de_texto_da_moeda_de_5_centavos.get() == "":
+        return mostra_a_mensagem_de_campo_em_branco(True)
+
+    return pega_as_quantidades_do_input_e_passa_para_a_funcao()
+
+
+def mostra_a_mensagem_de_campo_em_branco(resposta_booleana: bool):
+    if resposta_booleana:
+        label_de_alerta_de_valores_nao_preenchidos = Label(janela, text="Preencha todos os valores antes de apertar o botão!", foreground="red")
+        label_de_alerta_de_valores_nao_preenchidos.grid(column=6, row=4, columnspan=4, rowspan=2)
+    else:
+        return pega_as_quantidades_do_input_e_passa_para_a_funcao()
+
+
 def pega_as_quantidades_do_input_e_passa_para_a_funcao():
     lista_com_a_quantidade_de_cada_moeda = [
         caixa_de_texto_da_moeda_de_1_real.get(),
@@ -68,8 +91,8 @@ caixa_de_texto_da_moeda_de_10_centavos.grid(column=3, row=5, columnspan=2)
 caixa_de_texto_da_moeda_de_5_centavos = Entry(janela)
 caixa_de_texto_da_moeda_de_5_centavos.grid(column=3, row=6, columnspan=2)
 
-# Botão para chamar a função
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Confirmar", command=pega_as_quantidades_do_input_e_passa_para_a_funcao)
+# Botão para chamar a função "is_valor_em_branco"
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Confirmar", command=is_valor_em_branco)
 botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=5, row=4, columnspan=1, rowspan=2)
 
 janela.mainloop()
