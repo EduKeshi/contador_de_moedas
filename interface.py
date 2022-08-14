@@ -32,21 +32,19 @@ def is_eamil_invalido():
 
 
 def mostra_a_mensagem_de_campo_em_branco():
-    label_de_alerta_de_valores_nao_preenchidos = Label(janela,
-                                                       text="Preencha todos os\nvalores antes de\napertar o botão!",
-                                                       foreground="red")
-    label_de_alerta_de_valores_nao_preenchidos.grid(column=3, row=3, rowspan=3, columnspan=2)
+    label_de_alerta_de_valores_nao_preenchidos["text"] = "Preencha todos os\ncampos antes de\napertar o botão!"
 
 
 def mostra_a_mensagem_de_email_invalido():
-    label_de_alerta_de_email_invalido = Label(janela, text="E-mail inválido", foreground="red")
-    label_de_alerta_de_email_invalido.grid(column=1, row=10, columnspan=2)
+    label_de_alerta_de_email_invalido["text"] = "E-mail inválido"
 
 
 def pega_as_quantidades_do_input_e_passa_para_a_funcao():
     if is_campo_vazio():
         mostra_a_mensagem_de_campo_em_branco()
         return
+
+    label_de_alerta_de_valores_nao_preenchidos["text"] = ""
 
     lista_com_a_quantidade_de_cada_moeda = [
         caixa_de_texto_da_moeda_de_1_real.get(),
@@ -60,13 +58,17 @@ def pega_as_quantidades_do_input_e_passa_para_a_funcao():
         lista_com_a_quantidade_de_cada_moeda)
     soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
 
-    envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+    envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda,
+                                            soma_total)
 
 
-def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
+def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list,
+                                            lista_com_os_valores_de_cada_moeda: list, soma_total):
     if is_eamil_invalido():
         mostra_a_mensagem_de_email_invalido()
         return
+
+    label_de_alerta_de_email_invalido["text"] = ""
 
     email_para_enviar = caixa_de_texto_do_email.get()
 
@@ -119,7 +121,15 @@ caixa_de_texto_do_email = Entry(janela, width=35)
 caixa_de_texto_do_email.grid(column=1, row=8, columnspan=2)
 
 # Botão para chamar a função "pega_as_quantidades_do_input_e_passa_para_a_funcao"
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao)
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!",
+                                                         command=pega_as_quantidades_do_input_e_passa_para_a_funcao)
 botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=1, row=9, columnspan=2)
+
+# Label's das mensagens de erro
+label_de_alerta_de_valores_nao_preenchidos = Label(janela, text="", foreground="red")
+label_de_alerta_de_valores_nao_preenchidos.grid(column=3, row=3, rowspan=3, columnspan=2)
+
+label_de_alerta_de_email_invalido = Label(janela, text="", foreground="red")
+label_de_alerta_de_email_invalido.grid(column=1, row=10, columnspan=2)
 
 janela.mainloop()
