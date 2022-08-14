@@ -5,7 +5,6 @@ from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas
 from envia_emails import faz_o_corpo_do_email, manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total
 
 
-# Parte das moedas
 def is_campo_vazio():
     if caixa_de_texto_da_moeda_de_1_real.get() == "":
         return True
