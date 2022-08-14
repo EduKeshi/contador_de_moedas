@@ -1,16 +1,6 @@
 import win32com.client as win32
 
 
-def pergunta_para_qal_email_o_usuario_quer_enviar():
-    while True:
-        email_para_enviar = input("\nDigite o email da pessoa que você deseja enviar: ")
-
-        if "@" in email_para_enviar:
-            return email_para_enviar
-
-        print("Não tem @ no nesse e-mail, digite-o novamente")
-
-
 def faz_o_corpo_do_email(lista_com_a_quantidade_de_moedas: list, valor_individual_das_medas: list, valor_total, email_para_enviar):
     primeiro_nome_da_pessoa = email_para_enviar.split(".")
 
