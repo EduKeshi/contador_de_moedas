@@ -6,21 +6,30 @@ from envia_emails import faz_o_corpo_do_email, manda_emais_com_os_valores_de_cad
 
 
 # Parte das moedas
-def verifica_se_todos_os_campos_estao_preenchidos():
+def is_campo_vazio():
     if caixa_de_texto_da_moeda_de_1_real.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco()
+        return True
     if caixa_de_texto_da_moeda_de_50_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco()
+        return True
     if caixa_de_texto_da_moeda_de_25_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco()
+        return True
     if caixa_de_texto_da_moeda_de_10_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco()
+        return True
     if caixa_de_texto_da_moeda_de_5_centavos.get() == "":
-        return mostra_a_mensagem_de_campo_em_branco()
-    if "@" not in caixa_de_texto_do_email.get():
-        return mostra_a_mensagem_de_email_invalido()
+        return True
+    if caixa_de_texto_do_email.get() == "":
+        return True
 
-    return pega_as_quantidades_do_input_e_passa_para_a_funcao()
+    return False
+
+
+def is_eamil_invalido():
+    if "@" not in caixa_de_texto_do_email.get():
+        return True
+    elif "." not in caixa_de_texto_do_email.get():
+        return True
+    else:
+        return False
 
 
 def mostra_a_mensagem_de_campo_em_branco():
@@ -36,6 +45,10 @@ def mostra_a_mensagem_de_email_invalido():
 
 
 def pega_as_quantidades_do_input_e_passa_para_a_funcao():
+    if is_campo_vazio():
+        mostra_a_mensagem_de_campo_em_branco()
+        return
+
     lista_com_a_quantidade_de_cada_moeda = [
         caixa_de_texto_da_moeda_de_1_real.get(),
         caixa_de_texto_da_moeda_de_50_centavos.get(),
@@ -48,10 +61,16 @@ def pega_as_quantidades_do_input_e_passa_para_a_funcao():
         lista_com_a_quantidade_de_cada_moeda)
     soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
 
-    return envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+    envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+
+def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
+    if is_eamil_invalido():
+        mostra_a_mensagem_de_email_invalido()
+        return
 
 
 def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
+
     email_para_enviar = caixa_de_texto_do_email.get()
 
     corpo_do_email = faz_o_corpo_do_email(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda,
@@ -102,8 +121,8 @@ label_de_boas_vindas.grid(column=1, row=7, columnspan=2)
 caixa_de_texto_do_email = Entry(janela, width=35)
 caixa_de_texto_do_email.grid(column=1, row=8, columnspan=2)
 
-# Botão para chamar a função "is_valor_em_branco"
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=verifica_se_todos_os_campos_estao_preenchidos)
-botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=1, row=9, columnspan=2)
+mudando_as_funcoes
+# Botão para chamar a função "pega_as_quantidades_do_input_e_passa_para_a_funcao"
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao)
 
 janela.mainloop()
