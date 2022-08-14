@@ -63,11 +63,13 @@ def pega_as_quantidades_do_input_e_passa_para_a_funcao():
 
     envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
 
-
 def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
     if is_eamil_invalido():
         mostra_a_mensagem_de_email_invalido()
         return
+
+
+def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
 
     email_para_enviar = caixa_de_texto_do_email.get()
 
@@ -119,8 +121,8 @@ label_de_boas_vindas.grid(column=1, row=7, columnspan=2)
 caixa_de_texto_do_email = Entry(janela, width=35)
 caixa_de_texto_do_email.grid(column=1, row=8, columnspan=2)
 
+mudando_as_funcoes
 # Botão para chamar a função "pega_as_quantidades_do_input_e_passa_para_a_funcao"
 botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao)
-botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=1, row=9, columnspan=2)
 
 janela.mainloop()
