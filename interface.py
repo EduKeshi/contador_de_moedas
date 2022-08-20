@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter.messagebox import showinfo, showwarning
 
 from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas, \
     retorna_a_soma_total_dos_valores_das_moedas
@@ -33,19 +34,19 @@ def is_eamil_invalido():
 
 
 def mostra_a_mensagem_de_campo_em_branco():
-    label_de_alerta_de_valores_nao_preenchidos["text"] = "Preencha todos os\ncampos antes de\napertar o botão!"
+    showwarning(title="Campos em branco",
+                message="Informe todas as quantidades de moedas antes de apertar o botão!")
 
 
 def mostra_a_mensagem_de_email_invalido():
-    label_de_alerta_de_email_invalido["text"] = "E-mail inválido"
+    showwarning(title="E-mail inválido",
+                message="O e-mail digitado não é válido")
 
 
 def pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario():
     if is_campo_vazio():
         mostra_a_mensagem_de_campo_em_branco()
         return
-
-    label_de_alerta_de_valores_nao_preenchidos["text"] = ""
 
     lista_com_a_quantidade_de_cada_moeda = [
         caixa_de_texto_da_moeda_de_1_real.get(),
@@ -73,12 +74,11 @@ def pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuar
                                                 soma_total)
 
 
-def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
+def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list,
+                                            lista_com_os_valores_de_cada_moeda: list, soma_total):
     if is_eamil_invalido():
         mostra_a_mensagem_de_email_invalido()
         return
-
-    label_de_alerta_de_email_invalido["text"] = ""
 
     email_para_enviar = caixa_de_texto_do_email.get()
 
@@ -101,7 +101,8 @@ label_de_boas_vindas = Label(janela, text="Bem vindo\nao\ncontador de moedas")
 label_de_boas_vindas.grid(column=1, row=1, columnspan=2)
 
 for indice in range(5):
-    label_das_moedas = Label(janela, text=f"Qual a quantidade de moedas de {lista_com_os_valores_de_moedas_existentes[indice]}?")
+    label_das_moedas = Label(janela,
+                             text=f"Qual a quantidade de moedas de {lista_com_os_valores_de_moedas_existentes[indice]}?")
     label_das_moedas.grid(column=0, row=indice + 2)
 
 # Caixa de texto da moeda de 1 real
@@ -153,12 +154,5 @@ opcoes_de_dowload.grid(column=1, row=13, columnspan=2)
 # Botão para enviar a opção de download
 botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!", command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
 botao_para_defenir_a_opcao_de_download.grid(column=1, row=14, columnspan=2)
-
-# Label's das mensagens de erro
-label_de_alerta_de_valores_nao_preenchidos = Label(janela, text="", foreground="red")
-label_de_alerta_de_valores_nao_preenchidos.grid(column=3, row=3, rowspan=3, columnspan=2)
-
-label_de_alerta_de_email_invalido = Label(janela, text="", foreground="red")
-label_de_alerta_de_email_invalido.grid(column=1, row=10)
 
 janela.mainloop()
