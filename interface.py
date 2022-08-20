@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showinfo, showwarning
+from pathlib import Path
 
 from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas, \
     retorna_a_soma_total_dos_valores_das_moedas
@@ -61,21 +62,34 @@ def pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuar
     soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
 
     if opcao_selecionada.get() == "Arquivo de texto (.txt)":
-        faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda,
-                               lista_com_os_valores_de_cada_moeda,
-                               soma_total)
+        nome_do_arquivo = faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda,
+                                                 lista_com_os_valores_de_cada_moeda,
+                                                 soma_total)
+
+        local_do_arquivo_de_texto = Path(f"{nome_do_arquivo}.txt").absolute()
+
+        showinfo(title="Arquivo de texto gerado com sucesso",
+                 message=f"Seu arquivo foi gerado com sucesso.\n\nNome:\n{nome_do_arquivo}\n\nLocal:{local_do_arquivo_de_texto}")
+
     elif opcao_selecionada.get() == "Excel (.xlsx)":
-        faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda,
-                                                                 lista_com_os_valores_de_cada_moeda,
-                                                                 soma_total)
+        nome_do_arquivo = faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda,
+                                                                                   lista_com_os_valores_de_cada_moeda,
+                                                                                   soma_total)
+
+        local_da_planilha = Path(f"{nome_do_arquivo}.xlsx").absolute()
+
+        showinfo(title="Planilha gerada com sucesso",
+                 message=f"Seu arquivo foi gerado com sucesso.\n\nNome:\n{nome_do_arquivo}\n\nLocal:{local_da_planilha}")
+
     else:
         envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda,
                                                 lista_com_os_valores_de_cada_moeda,
                                                 soma_total)
 
+        showinfo(message="E-mail enviado com sucesso!")
 
-def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list,
-                                            lista_com_os_valores_de_cada_moeda: list, soma_total):
+
+def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
     if is_eamil_invalido():
         mostra_a_mensagem_de_email_invalido()
         return
@@ -134,7 +148,8 @@ caixa_de_texto_do_email = Entry(janela, width=35)
 caixa_de_texto_do_email.grid(column=1, row=8, columnspan=2)
 
 # Botão para chamar a função "pega_as_quantidades_do_input_e_passa_para_a_funcao"
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!",
+                                                         command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
 botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=1, row=9, columnspan=2)
 
 # Label antes da combobox
@@ -152,7 +167,8 @@ opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download,
 opcoes_de_dowload.grid(column=1, row=13, columnspan=2)
 
 # Botão para enviar a opção de download
-botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!", command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
+botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!",
+                                                command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
 botao_para_defenir_a_opcao_de_download.grid(column=1, row=14, columnspan=2)
 
 janela.mainloop()
