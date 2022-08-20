@@ -2,6 +2,8 @@ import openpyxl
 
 
 def faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
+    nome_do_arquivo = "Contagem_das_suas_moedas"
+
     nova_planilha = openpyxl.Workbook()
 
     aba_atual = nova_planilha.active
@@ -20,4 +22,6 @@ def faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantid
     aba_atual["C1"] = "Valor total das suas moedas"
     aba_atual["C4"] = soma_total
 
-    nova_planilha.save("Contagem_das_suas_moedas.xlsx")
+    nova_planilha.save(f"{nome_do_arquivo}.xlsx")
+
+    return nome_do_arquivo

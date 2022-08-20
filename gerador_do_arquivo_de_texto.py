@@ -1,5 +1,6 @@
-def faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list,
-                           soma_total):
+def faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
+    nome_do_arquivo = "Moedas contadas"
+
     texto_do_arquivo = f"""Quantidade das suas moedas:
     Moeda de 1 real: {lista_com_a_quantidade_de_cada_moeda[0]}
     Moeda de 50 centavos: {lista_com_a_quantidade_de_cada_moeda[1]}
@@ -17,5 +18,7 @@ Valor individual de cada moedas:
 Valor total das moedas:
      {soma_total} R$
     """
-    arquivo_de_texto_novo = open("Moedas contadas.txt", "w")
+    arquivo_de_texto_novo = open(f"{nome_do_arquivo}.txt", "w")
     arquivo_de_texto_novo.write(texto_do_arquivo)
+
+    return nome_do_arquivo
