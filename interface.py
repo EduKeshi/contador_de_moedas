@@ -43,6 +43,19 @@ def mostra_a_mensagem_de_email_invalido():
                 message="O e-mail digitado não é válido")
 
 
+def exclui_o_conteudo_das_entradas():
+    caixa_de_texto_da_moeda_de_1_real.delete("0", "end")
+    caixa_de_texto_da_moeda_de_50_centavos.delete("0", "end")
+    caixa_de_texto_da_moeda_de_25_centavos.delete("0", "end")
+    caixa_de_texto_da_moeda_de_10_centavos.delete("0", "end")
+    caixa_de_texto_da_moeda_de_5_centavos.delete("0", "end")
+    caixa_de_texto_do_email.delete("0", "end")
+
+
+def exclui_o_conteudo_da_combobox():
+    opcoes_de_dowload.delete("0", "end")
+
+
 def pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades():
     if is_campo_vazio():
         mostra_a_mensagem_de_campo_em_branco()
@@ -74,6 +87,9 @@ def chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda: list, lista_co
         envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda,
                                                 lista_com_os_valores_de_cada_moeda,
                                                 soma_total)
+
+    exclui_o_conteudo_das_entradas()
+    exclui_o_conteudo_da_combobox()
 
 
 def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
@@ -147,7 +163,7 @@ label_falando_para_baixar_o_arquivo.grid(column=1, row=12, columnspan=2)
 
 # Caixa de opções de download
 opcao_selecionada = StringVar()
-opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download, state="readonly",
+opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download, state="normal",
                                  textvariable=opcao_selecionada)
 opcoes_de_dowload.grid(column=1, row=13, columnspan=2)
 
