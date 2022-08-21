@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter.messagebox import showinfo, showwarning
-from pathlib import Path
+from tkinter.messagebox import showwarning
 
 from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas, \
     retorna_a_soma_total_dos_valores_das_moedas
@@ -44,7 +43,7 @@ def mostra_a_mensagem_de_email_invalido():
                 message="O e-mail digitado não é válido")
 
 
-def pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario():
+def pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades():
     if is_campo_vazio():
         mostra_a_mensagem_de_campo_em_branco()
         return
@@ -57,36 +56,24 @@ def pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuar
         caixa_de_texto_da_moeda_de_5_centavos.get(),
     ]
 
-    lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(
-        lista_com_a_quantidade_de_cada_moeda)
+    lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda)
     soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
 
+    chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+
+
+def chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
     if opcao_selecionada.get() == "Arquivo de texto (.txt)":
-        nome_do_arquivo = faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda,
-                                                 lista_com_os_valores_de_cada_moeda,
-                                                 soma_total)
-
-        local_do_arquivo_de_texto = Path(f"{nome_do_arquivo}.txt").absolute()
-
-        showinfo(title="Arquivo de texto gerado com sucesso",
-                 message=f"Seu arquivo foi gerado com sucesso.\n\nNome:\n{nome_do_arquivo}\n\nLocal:{local_do_arquivo_de_texto}")
+        faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
 
     elif opcao_selecionada.get() == "Excel (.xlsx)":
-        nome_do_arquivo = faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda,
-                                                                                   lista_com_os_valores_de_cada_moeda,
-                                                                                   soma_total)
-
-        local_da_planilha = Path(f"{nome_do_arquivo}.xlsx").absolute()
-
-        showinfo(title="Planilha gerada com sucesso",
-                 message=f"Seu arquivo foi gerado com sucesso.\n\nNome:\n{nome_do_arquivo}\n\nLocal:{local_da_planilha}")
-
+        faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda,
+                                                                 lista_com_os_valores_de_cada_moeda,
+                                                                 soma_total)
     else:
         envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda,
                                                 lista_com_os_valores_de_cada_moeda,
                                                 soma_total)
-
-        showinfo(message="E-mail enviado com sucesso!")
 
 
 def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
@@ -115,8 +102,7 @@ label_de_boas_vindas = Label(janela, text="Bem vindo\nao\ncontador de moedas")
 label_de_boas_vindas.grid(column=1, row=1, columnspan=2)
 
 for indice in range(5):
-    label_das_moedas = Label(janela,
-                             text=f"Qual a quantidade de moedas de {lista_com_os_valores_de_moedas_existentes[indice]}?")
+    label_das_moedas = Label(janela, text=f"Qual a quantidade de moedas de {lista_com_os_valores_de_moedas_existentes[indice]}?")
     label_das_moedas.grid(column=0, row=indice + 2)
 
 # Caixa de texto da moeda de 1 real
@@ -148,8 +134,7 @@ caixa_de_texto_do_email = Entry(janela, width=35)
 caixa_de_texto_do_email.grid(column=1, row=8, columnspan=2)
 
 # Botão para chamar a função "pega_as_quantidades_do_input_e_passa_para_a_funcao"
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!",
-                                                         command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades)
 botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=1, row=9, columnspan=2)
 
 # Label antes da combobox
@@ -167,8 +152,7 @@ opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download,
 opcoes_de_dowload.grid(column=1, row=13, columnspan=2)
 
 # Botão para enviar a opção de download
-botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!",
-                                                command=pega_as_quantidades_do_input_e_chama_a_funcao_relacionada_a_escolha_do_usuario)
+botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades)
 botao_para_defenir_a_opcao_de_download.grid(column=1, row=14, columnspan=2)
 
 janela.mainloop()
