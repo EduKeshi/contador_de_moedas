@@ -1,3 +1,7 @@
+from pathlib import Path
+from tkinter.messagebox import showinfo
+
+
 def faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
     nome_do_arquivo = "Moedas contadas"
 
@@ -21,4 +25,11 @@ Valor total das moedas:
     arquivo_de_texto_novo = open(f"{nome_do_arquivo}.txt", "w")
     arquivo_de_texto_novo.write(texto_do_arquivo)
 
-    return nome_do_arquivo
+    mostra_a_mensagem_de_sucesso_do_txt_gerado(nome_do_arquivo)
+
+
+def mostra_a_mensagem_de_sucesso_do_txt_gerado(nome_do_arquivo: str):
+    local_do_arquivo_de_texto = Path(f"{nome_do_arquivo}.txt").absolute()
+
+    showinfo(title="Arquivo de texto gerado com sucesso",
+             message=f"Seu arquivo foi gerado com sucesso.\n\nNome:\n{nome_do_arquivo}\n\nLocal:{local_do_arquivo_de_texto}")
