@@ -1,4 +1,6 @@
 import openpyxl
+from tkinter.messagebox import showinfo
+from pathlib import Path
 
 
 def faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
@@ -24,4 +26,11 @@ def faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantid
 
     nova_planilha.save(f"{nome_do_arquivo}.xlsx")
 
-    return nome_do_arquivo
+    mostra_a_mensagem_de_sucesso_da_planilha(nome_do_arquivo)
+
+
+def mostra_a_mensagem_de_sucesso_da_planilha(nome_do_arquivo):
+    local_da_planilha = Path(f"{nome_do_arquivo}.xlsx").absolute()
+
+    showinfo(title="Planilha gerada com sucesso",
+             message=f"Seu arquivo foi gerado com sucesso.\n\nNome:\n{nome_do_arquivo}\n\nLocal:{local_da_planilha}")

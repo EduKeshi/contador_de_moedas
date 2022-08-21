@@ -1,4 +1,5 @@
 import win32com.client as win32
+from tkinter.messagebox import showinfo
 
 
 def faz_o_corpo_do_email(lista_com_a_quantidade_de_moedas: list, valor_individual_das_medas: list, valor_total, email_para_enviar):
@@ -44,3 +45,9 @@ def manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total(email_para_
     email.HTMLBody = corpo_do_email
 
     email.Send()
+
+    mostra_a_mensagem_de_sucesso_do_e_mail_enviado()
+
+
+def mostra_a_mensagem_de_sucesso_do_e_mail_enviado():
+    showinfo(message="E-mail enviado com sucesso!")
