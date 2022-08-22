@@ -2,35 +2,31 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.messagebox import showwarning
 
-from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas, \
-    retorna_a_soma_total_dos_valores_das_moedas
+from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas, retorna_a_soma_total_dos_valores_das_moedas
 from envia_emails import faz_o_corpo_do_email, manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total
 from gerador_da_planilha import faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas
 from gerador_do_arquivo_de_texto import faz_o_arquivo_de_texto
+from exceptions import ValorEmBrancoException, LetraNaEntryException, EmailSemPontoException, EmailSemArrobaException
 
 
-def is_campo_vazio():
-    if caixa_de_texto_da_moeda_de_1_real.get() == "":
-        return True
-    elif caixa_de_texto_da_moeda_de_50_centavos.get() == "":
-        return True
-    elif caixa_de_texto_da_moeda_de_25_centavos.get() == "":
-        return True
-    elif caixa_de_texto_da_moeda_de_10_centavos.get() == "":
-        return True
-    elif caixa_de_texto_da_moeda_de_5_centavos.get() == "":
-        return True
-    else:
-        return False
+def valida_string_vazio(lista: list):
+    if "" in lista:
+        raise ValorEmBrancoException()
 
 
-def is_eamil_invalido():
-    if "@" not in caixa_de_texto_do_email.get():
-        return True
-    elif "." not in caixa_de_texto_do_email.get():
-        return True
-    else:
-        return False
+def valida_string_alfanumertico(string: str):
+    if string.isalpha():
+        raise LetraNaEntryException()
+
+
+def valida_email_sem_arroba(email: str):
+    if "@" not in email:
+        raise EmailSemArrobaException()
+
+
+def valida_email_sem_ponto(email: str):
+    if "." not in email:
+        raise EmailSemPontoException()
 
 
 def mostra_a_mensagem_de_campo_em_branco():
@@ -38,9 +34,19 @@ def mostra_a_mensagem_de_campo_em_branco():
                 message="Informe todas as quantidades de moedas antes de apertar o botão!")
 
 
-def mostra_a_mensagem_de_email_invalido():
+def mostra_a_mensagem_de_letra_ao_inves_de_numero():
+    showwarning(title="Letras no lugar de números",
+                message="Todos os campos devem ser números!")
+
+
+def mostra_a_mensagem_de_email_sem_arroba():
     showwarning(title="E-mail inválido",
-                message="O e-mail digitado não é válido")
+                message="O e-mail digitado não tem @")
+
+
+def mostra_a_mensagem_de_email_sem_ponto():
+    showwarning(title="E-mial inválido",
+                message="O e-mail digitado não possui . (ponto)")
 
 
 def exclui_o_conteudo_das_entradas():
@@ -57,10 +63,6 @@ def exclui_o_conteudo_da_combobox():
 
 
 def pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades():
-    if is_campo_vazio():
-        mostra_a_mensagem_de_campo_em_branco()
-        return
-
     lista_com_a_quantidade_de_cada_moeda = [
         caixa_de_texto_da_moeda_de_1_real.get(),
         caixa_de_texto_da_moeda_de_50_centavos.get(),
@@ -69,10 +71,22 @@ def pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalida
         caixa_de_texto_da_moeda_de_5_centavos.get(),
     ]
 
-    lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda)
-    soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
+    try:
+        valida_string_vazio(lista_com_a_quantidade_de_cada_moeda)
+        valida_string_alfanumertico(lista_com_a_quantidade_de_cada_moeda[0])
+        valida_string_alfanumertico(lista_com_a_quantidade_de_cada_moeda[1])
+        valida_string_alfanumertico(lista_com_a_quantidade_de_cada_moeda[2])
+        valida_string_alfanumertico(lista_com_a_quantidade_de_cada_moeda[3])
+        valida_string_alfanumertico(lista_com_a_quantidade_de_cada_moeda[4])
 
-    chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+        lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda)
+        soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
+        chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+
+    except ValorEmBrancoException:
+        mostra_a_mensagem_de_campo_em_branco()
+    except LetraNaEntryException:
+        mostra_a_mensagem_de_letra_ao_inves_de_numero()
 
 
 def chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
@@ -80,30 +94,29 @@ def chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda: list, lista_co
         faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
 
     elif opcao_selecionada.get() == "Excel (.xlsx)":
-        faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda,
-                                                                 lista_com_os_valores_de_cada_moeda,
-                                                                 soma_total)
+        faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+
     else:
-        envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda,
-                                                lista_com_os_valores_de_cada_moeda,
-                                                soma_total)
+        envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
 
     exclui_o_conteudo_das_entradas()
     exclui_o_conteudo_da_combobox()
 
 
 def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
-    if is_eamil_invalido():
-        mostra_a_mensagem_de_email_invalido()
-        return
-
     email_para_enviar = caixa_de_texto_do_email.get()
 
-    corpo_do_email = faz_o_corpo_do_email(lista_com_a_quantidade_de_cada_moeda,
-                                          lista_com_os_valores_de_cada_moeda,
-                                          soma_total,
-                                          email_para_enviar)
-    manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total(email_para_enviar, corpo_do_email)
+    try:
+        valida_email_sem_arroba(email_para_enviar)
+        valida_email_sem_ponto(email_para_enviar)
+
+        corpo_do_email = faz_o_corpo_do_email(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total, email_para_enviar)
+        manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total(email_para_enviar, corpo_do_email)
+
+    except EmailSemArrobaException:
+        mostra_a_mensagem_de_email_sem_arroba()
+    except EmailSemPontoException:
+        mostra_a_mensagem_de_email_sem_ponto()
 
 
 janela = Tk()
@@ -163,8 +176,7 @@ label_falando_para_baixar_o_arquivo.grid(column=1, row=12, columnspan=2)
 
 # Caixa de opções de download
 opcao_selecionada = StringVar()
-opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download, state="normal",
-                                 textvariable=opcao_selecionada)
+opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download, state="normal", textvariable=opcao_selecionada)
 opcoes_de_dowload.grid(column=1, row=13, columnspan=2)
 
 # Botão para enviar a opção de download
