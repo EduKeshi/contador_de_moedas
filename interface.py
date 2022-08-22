@@ -1,21 +1,21 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter.messagebox import showwarning
 
 from contador_de_moedas import retorna_uma_lista_com_todos_os_valores_das_moedas, retorna_a_soma_total_dos_valores_das_moedas
 from envia_emails import faz_o_corpo_do_email, manda_emais_com_os_valores_de_cada_moeda_contada_e_o_valor_total
 from gerador_da_planilha import faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas
 from gerador_do_arquivo_de_texto import faz_o_arquivo_de_texto
 from exceptions import ValorEmBrancoException, LetraNaEntryException, EmailSemPontoException, EmailSemArrobaException
+from mensagens_de_erro import mostra_a_mensagem_de_campo_em_branco, mostra_a_mensagem_de_letra_ao_inves_de_numero, mostra_a_mensagem_de_email_sem_arroba, mostra_a_mensagem_de_email_sem_ponto
 
 
-def valida_string_vazio(lista: list):
-    if "" in lista:
+def valida_string_vazio(lista_com_a_quantidade_de_moedas: list):
+    if "" in lista_com_a_quantidade_de_moedas:
         raise ValorEmBrancoException()
 
 
-def valida_string_alfanumertico(string: str):
-    if string.isalpha():
+def valida_string_alfanumertico(string_com_a_quantidade_da_moeda: str):
+    if string_com_a_quantidade_da_moeda.isalpha():
         raise LetraNaEntryException()
 
 
@@ -27,26 +27,6 @@ def valida_email_sem_arroba(email: str):
 def valida_email_sem_ponto(email: str):
     if "." not in email:
         raise EmailSemPontoException()
-
-
-def mostra_a_mensagem_de_campo_em_branco():
-    showwarning(title="Campos em branco",
-                message="Informe todas as quantidades de moedas antes de apertar o botão!")
-
-
-def mostra_a_mensagem_de_letra_ao_inves_de_numero():
-    showwarning(title="Letras no lugar de números",
-                message="Todos os campos devem ser números!")
-
-
-def mostra_a_mensagem_de_email_sem_arroba():
-    showwarning(title="E-mail inválido",
-                message="O e-mail digitado não tem @")
-
-
-def mostra_a_mensagem_de_email_sem_ponto():
-    showwarning(title="E-mial inválido",
-                message="O e-mail digitado não possui . (ponto)")
 
 
 def exclui_o_conteudo_das_entradas():
