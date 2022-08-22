@@ -62,7 +62,7 @@ def exclui_o_conteudo_da_combobox():
     opcoes_de_dowload.delete("0", "end")
 
 
-def pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades():
+def pega_as_quantidades_do_input():
     lista_com_a_quantidade_de_cada_moeda = [
         caixa_de_texto_da_moeda_de_1_real.get(),
         caixa_de_texto_da_moeda_de_50_centavos.get(),
@@ -81,26 +81,13 @@ def pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalida
 
         lista_com_os_valores_de_cada_moeda = retorna_uma_lista_com_todos_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda)
         soma_total = retorna_a_soma_total_dos_valores_das_moedas(lista_com_os_valores_de_cada_moeda)
-        chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+
+        return lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total
 
     except ValorEmBrancoException:
         mostra_a_mensagem_de_campo_em_branco()
     except LetraNaEntryException:
         mostra_a_mensagem_de_letra_ao_inves_de_numero()
-
-
-def chama_as_outras_funcoes(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
-    if opcao_selecionada.get() == "Arquivo de texto (.txt)":
-        faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
-
-    elif opcao_selecionada.get() == "Excel (.xlsx)":
-        faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
-
-    else:
-        envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
-
-    exclui_o_conteudo_das_entradas()
-    exclui_o_conteudo_da_combobox()
 
 
 def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda: list, lista_com_os_valores_de_cada_moeda: list, soma_total):
@@ -117,6 +104,24 @@ def envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda
         mostra_a_mensagem_de_email_sem_arroba()
     except EmailSemPontoException:
         mostra_a_mensagem_de_email_sem_ponto()
+
+
+def chama_as_outras_funcoes():
+    lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total = pega_as_quantidades_do_input()
+
+    if opcao_selecionada.get() == "Arquivo de texto (.txt)":
+        faz_o_arquivo_de_texto(lista_com_a_quantidade_de_cada_moeda, lista_com_os_valores_de_cada_moeda, soma_total)
+
+    elif opcao_selecionada.get() == "Excel (.xlsx)":
+        faz_a_planilha_excel_com_os_dados_da_contagem_das_moedas(lista_com_a_quantidade_de_cada_moeda,
+                                                                 lista_com_os_valores_de_cada_moeda, soma_total)
+
+    else:
+        envia_o_email_com_os_valores_das_moedas(lista_com_a_quantidade_de_cada_moeda,
+                                                lista_com_os_valores_de_cada_moeda, soma_total)
+
+    exclui_o_conteudo_das_entradas()
+    exclui_o_conteudo_da_combobox()
 
 
 janela = Tk()
@@ -163,7 +168,7 @@ caixa_de_texto_do_email = Entry(janela, width=35)
 caixa_de_texto_do_email.grid(column=1, row=8, columnspan=2)
 
 # Botão para chamar a função "pega_as_quantidades_do_input_e_passa_para_a_funcao"
-botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades)
+botao_para_enviar_a_resposta_da_moeda_de_1_real = Button(janela, text="Enviar o E-mail!", command=chama_as_outras_funcoes)
 botao_para_enviar_a_resposta_da_moeda_de_1_real.grid(column=1, row=9, columnspan=2)
 
 # Label antes da combobox
@@ -180,7 +185,7 @@ opcoes_de_dowload = ttk.Combobox(janela, values=lista_com_as_opcoes_de_download,
 opcoes_de_dowload.grid(column=1, row=13, columnspan=2)
 
 # Botão para enviar a opção de download
-botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!", command=pega_as_quantidades_do_input_e_passa_para_a_funcao_que_chama_as_funcionalidades)
+botao_para_defenir_a_opcao_de_download = Button(janela, text="Baixar!", command=chama_as_outras_funcoes)
 botao_para_defenir_a_opcao_de_download.grid(column=1, row=14, columnspan=2)
 
 janela.mainloop()
